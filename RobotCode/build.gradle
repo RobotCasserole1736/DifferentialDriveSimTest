@@ -96,7 +96,28 @@ jar {
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Path .json copy
+///////////////////////////////////////////////////////////////////////////////////////////////////
+def PATH_JSON_SRC_DIR = "$projectDir/../PathWeaver/PathWeaver/output"
+def PATH_JSON_OUTPUT_DIR = "$projectDir/src/main/deploy/pathData"
 
+tasks.register('cleanPathJsons', Delete) {
+    delete fileTree(PATH_JSON_OUTPUT_DIR).matching {
+        include "**/*.json"
+    }
+}
+
+tasks.register('copyPathJsons', Copy) {
+    from layout.buildDirectory.dir(PATH_JSON_SRC_DIR)
+    include "*.json"
+    into layout.buildDirectory.dir(PATH_JSON_OUTPUT_DIR)
+}
+
+copyPathJsons.dependsOn cleanPathJsons
+
+build.dependsOn copyPathJsons
+simulateExternalJava.dependsOn copyPathJsons
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Build Meta-data file generation

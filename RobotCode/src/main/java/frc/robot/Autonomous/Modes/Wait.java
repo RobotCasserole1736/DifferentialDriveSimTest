@@ -3,7 +3,6 @@ package frc.robot.Autonomous.Modes;
 import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Autonomous.Events.AutoEventWait;
-import frc.robot.Drivetrain.Drivetrain;
 
 public class Wait extends AutoMode {
 
@@ -18,11 +17,6 @@ public class Wait extends AutoMode {
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
         seq.addEvent(new AutoEventWait(duration));
-    }
-
-    @Override
-    public void setInitialPose(Drivetrain d) {
-        // Nothing
     }
     
 }
