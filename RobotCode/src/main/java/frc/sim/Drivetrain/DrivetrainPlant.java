@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import frc.Constants;
-import frc.UnitUtils;
 import frc.robot.PoseTelemetry;
 import frc.robot.Drivetrain.DtUtils;
 import frc.wrappers.SimCANDeviceBank;

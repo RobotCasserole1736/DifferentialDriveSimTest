@@ -41,7 +41,7 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
     boolean done = false;
 
-    Trajectory trajectory;
+    public Trajectory trajectory;
     List<State> stateList;
 
     Drivetrain dt_inst;
@@ -66,16 +66,16 @@ public class AutoEventJSONTrajectory extends AutoEvent {
     public void userUpdate() {
         double curTime = (Timer.getFPGATimestamp()-startTime);
 
-        //Advance to current timestep
-        while(stateList.get(curStep).timeSeconds < curTime){
-            curStep++;
-        }
-
         //Check for finish
-        if(curTime > trajectory.getTotalTimeSeconds() || curStep > stateList.size() ) {
+        if(curTime >= trajectory.getTotalTimeSeconds() || curStep >= stateList.size() ) {
             done = true;
             dt_inst.setCmd(0,0);
             return;
+        }
+
+        //Advance to current timestep
+        while(stateList.get(curStep).timeSeconds < curTime){
+            curStep++;
         }
 
         // Extract current and previous steps

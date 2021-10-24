@@ -15,11 +15,12 @@ import frc.lib.miniNT4.topics.Topic;
 import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
 import frc.robot.Autonomous.Modes.Wait;
+import frc.robot.Drivetrain.Drivetrain;
 
 
 /*
  *******************************************************************************************
- * Copyright (C) 2020 FRC Team 1736 Robot Casserole - www.robotcasserole.org
+ * Copyright (C) 2022 FRC Team 1736 Robot Casserole - www.robotcasserole.org
  *******************************************************************************************
  *
  * This software is released under the MIT Licence - see the license.txt
@@ -43,8 +44,8 @@ public class Autonomous extends LocalClient  {
     Topic curDelayModeTopic = null;
     Topic curMainModeTopic = null;
 
-    int curDelayMode_dashboard = 0;
-    int curMainMode_dashboard = 0;
+    long curDelayMode_dashboard = 0;
+    long curMainMode_dashboard = 0;
 
     public AutoModeList mainModeList = new AutoModeList("main");
     public AutoModeList delayModeList = new AutoModeList("delay");
@@ -90,14 +91,14 @@ public class Autonomous extends LocalClient  {
 
     /* This should be called periodically in Disabled, and once in auto init */
     public void sampleDashboardSelector(){
-
-        curDelayMode = delayModeList.get(curDelayMode_dashboard);
-        curMainMode = mainModeList.get(curMainMode_dashboard);	
+        curDelayMode = delayModeList.get((int)curDelayMode_dashboard);
+        curMainMode = mainModeList.get((int)curMainMode_dashboard);	
         loadSequencer();
     }
 
 
     public void startSequencer(){
+        sampleDashboardSelector(); //ensure it gets called once more
         if(curMainMode != null){
             seq.start();
         }
@@ -112,16 +113,13 @@ public class Autonomous extends LocalClient  {
             seq.stop();
             seq.clearAllEvents();
 
-            if(curDelayMode != null){
-                curDelayMode.addStepsToSequencer(seq);
-            }
-
-            if(curMainMode != null){
-                curMainMode.addStepsToSequencer(seq);
-            }
-            
+            curDelayMode.addStepsToSequencer(seq);
+            curMainMode.addStepsToSequencer(seq);
+        
             prevDelayMode = curDelayMode;
             prevMainMode = curMainMode;
+
+            Drivetrain.getInstance().setCurPose(curMainMode.getInitialPose());
         }
     }
 
@@ -133,8 +131,7 @@ public class Autonomous extends LocalClient  {
 
     /* Should be called when returning to disabled to stop everything */
     public void reset(){
-        curDelayMode = null;
-        curMainMode = null;
+        seq.stop();
         loadSequencer();
     }
 
@@ -150,9 +147,9 @@ public class Autonomous extends LocalClient  {
     @Override
     public void onValueUpdate(Topic topic, TimestampedValue newVal) {
         if(topic.name.equals(delayModeList.getDesModeTopicName())){
-            curDelayMode_dashboard = (Integer) newVal.getVal();
+            curDelayMode_dashboard = (Long) newVal.getVal();
         } else if(topic.name.equals(mainModeList.getDesModeTopicName())){
-            curMainMode_dashboard =(Integer) newVal.getVal();
+            curMainMode_dashboard =(Long) newVal.getVal();
         }         
     }
 }

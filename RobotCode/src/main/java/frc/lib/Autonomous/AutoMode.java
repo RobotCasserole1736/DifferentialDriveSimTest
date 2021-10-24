@@ -2,6 +2,7 @@ package frc.lib.Autonomous;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.lib.AutoSequencer.AutoSequencer;
+import frc.robot.Autonomous.Events.AutoTrajectoryConstants;
 
 public abstract class AutoMode {
 
@@ -16,6 +17,6 @@ public abstract class AutoMode {
     }
     
     public Pose2d getInitialPose(){
-        return new Pose2d();
+        return AutoTrajectoryConstants.DEFAULT_START_POSE;
     }
 }

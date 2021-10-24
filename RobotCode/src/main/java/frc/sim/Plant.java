@@ -4,7 +4,7 @@ import frc.sim.Drivetrain.DrivetrainPlant;
 
 public class Plant {
 
-    DrivetrainPlant m_dt;
+    public DrivetrainPlant m_dt;
 
     public Plant(){
         m_dt = new DrivetrainPlant();

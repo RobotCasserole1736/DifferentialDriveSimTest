@@ -48,7 +48,7 @@ public class Dashboard {
         //d.addCamera("cam2", "http://10.17.36.10:1182/stream.mjpg", RIGHT_COL, ROW2, 0.75);
 
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_masterCaution"),"Master Caution", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW2, 1.0);
-        //d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW2, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW2, 1.0);
         //d.addIcon(SignalUtils.nameToNT4ValueTopic("db_climberUpperLimit"),"Climber Upper Limit", "#FFFF00", "icons/upperLimit.svg", CENTER_COL+6, ROW2, 1.0);
 
         //d.addIcon(SignalUtils.nameToNT4ValueTopic("db_shooterSpoolup"),"Shooter Spoolup", "#FFFF00", "icons/speed.svg", CENTER_COL-6, ROW2+5, 1.0);

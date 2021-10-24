@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    auto.sampleDashboardSelector();
     dt.setCmd(0.0, 0.0);
   }
 
@@ -95,12 +96,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
+    syncSimPoseToEstimate();
+    auto.startSequencer();
   }
 
   @Override
-  public void autonomousPeriodic() {
-
+  public void autonomousPeriodic() { 
+    auto.update();
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +111,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
   }
 
   @Override
@@ -146,6 +147,12 @@ public class Robot extends TimedRobot {
 
   public void simulationSetup(){
     m_plant = new Plant();
+  }
+
+  public void syncSimPoseToEstimate(){
+    if(Robot.isSimulation()){
+      m_plant.m_dt.resetPose(PoseTelemetry.getInstance().estimatedPose);
+    }
   }
 
   @Override

@@ -2,12 +2,14 @@ package frc.robot.Drivetrain;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.PoseTelemetry;
+import frc.robot.Robot;
 
 public class Drivetrain {
 
@@ -176,7 +178,13 @@ public class Drivetrain {
         curDesTrajState = dState;
     }
 
-        
+    /**
+     * Resets pose estimator to a known position
+     * @param pose_in
+     */
+    public void setCurPose(Pose2d pose_in){
+        poseEst.resetToPose(pose_in);
+    }
     
 
     
