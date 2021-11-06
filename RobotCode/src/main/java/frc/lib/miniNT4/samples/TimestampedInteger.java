@@ -4,8 +4,15 @@ import java.io.IOException;
 
 import org.msgpack.core.MessageBufferPacker;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class TimestampedInteger extends TimestampedValue {
     long value;
+
+    public TimestampedInteger(long value){
+        this.value = value;
+        this.timestamp_us = Math.round(Timer.getFPGATimestamp() * 1000000);
+    }
 
     public TimestampedInteger(long value, long time){
         this.value = value;

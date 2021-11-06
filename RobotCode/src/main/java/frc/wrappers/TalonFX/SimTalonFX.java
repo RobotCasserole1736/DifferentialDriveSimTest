@@ -16,7 +16,6 @@ public class SimTalonFX extends CasseroleTalonFX {
     private double kP;
     private double kI;
     private double kD;
-    private double kF;
 
     @Signal
     private double curWindingVoltage;
@@ -42,17 +41,16 @@ public class SimTalonFX extends CasseroleTalonFX {
 
 
     @Override
-    public void setClosedLoopGains(double p, double i, double d, double f) {
+    public void setClosedLoopGains(double p, double i, double d) {
         kP = p;
         kI = i;
         kD = d;
-        kF = f;        
     }
 
 
     @Override
-    public void setVelocityCmd(double velocity_radpersec) {
-        setVoltageCmd(ctrePIDSim(velocity_radpersec));
+    public void setClosedLoopCmd(double velocityCmd_radpersec, double arbFF_fracSupply) {
+        setVoltageCmd(ctrePIDSim(velocityCmd_radpersec, arbFF_fracSupply));
     }
 
 
@@ -117,7 +115,7 @@ public class SimTalonFX extends CasseroleTalonFX {
      * A rough guess at the behavior of the CTRE controller from 
      * https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#closed-loop-configurations
      */
-    private double ctrePIDSim(double vel_cmd){
+    private double ctrePIDSim(double vel_cmd, double arb_ff_frac){
         var velError_RPM = Units.radiansPerSecondToRotationsPerMinute(curVel_radpersec - vel_cmd);
         var velErrorNative = RPMtoCTRENativeUnits(velError_RPM);
         
@@ -128,11 +126,11 @@ public class SimTalonFX extends CasseroleTalonFX {
         var pTerm = velErrorNative * kP;
         var dTerm = velErrNative_delta * kD;
         var iTerm = velErrNative_accum * kI;
-        var fTerm = vel_cmd * kF;
+        var fTerm = arb_ff_frac;
 
         velErrNative_prev = velErrorNative;
 
-        return limitVoltage((pTerm + dTerm + iTerm + fTerm) / 1023.0 * curSupplyVoltage);
+        return limitVoltage(((pTerm + dTerm + iTerm) / 1023.0 + fTerm) * curSupplyVoltage);
     }
 
 

@@ -52,8 +52,7 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
         var poseList = new PoseListGenerator(jsonFileName).getPoseList();
 
-        trajectory = TrajectoryGenerator.generateTrajectory(poseList, AutoTrajectoryConstants.getConfig()); 
-        stateList = trajectory.getStates();
+        trajectory = TrajectoryGenerator.generateTrajectory(poseList, AutoTrajectoryConstants.getConfig());         
     }
 
     /**
@@ -61,25 +60,19 @@ public class AutoEventJSONTrajectory extends AutoEvent {
      * assign these velocities to the drivetrain at the proper time.
      */
     private double startTime = 0;
-    private int curStep = 0;
 
     public void userUpdate() {
         double curTime = (Timer.getFPGATimestamp()-startTime);
 
         //Check for finish
-        if(curTime >= trajectory.getTotalTimeSeconds() || curStep >= stateList.size() ) {
+        if(curTime >= trajectory.getTotalTimeSeconds()) {
             done = true;
             dt_inst.setCmd(0,0);
             return;
         }
 
-        //Advance to current timestep
-        while(stateList.get(curStep).timeSeconds < curTime){
-            curStep++;
-        }
-
         // Extract current and previous steps
-        State curState = stateList.get(curStep);
+        State curState = trajectory.sample(curTime);
 
         dt_inst.setCmd(curState);
 

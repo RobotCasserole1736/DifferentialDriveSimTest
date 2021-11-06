@@ -27,8 +27,12 @@ public class Constants {
     public static final double kDtGearRatio = 1.0/ 12.0;
 
     // Characterization results
-    public static final LinearSystem<N2, N2, N2> drivetrainSystem =
-    LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3);
+    public static final double DT_kSL = 0.0;  // min voltage to overcome static friction in fwd/rev
+    public static final double DT_kVL = 1.98; // volts per (meter per second)
+    public static final double DT_kAL = 0.2;  // volts per (meter per second squared)
+    public static final double DT_kSA = 0.0;  // min voltage to overcome static friction in rotation
+    public static final double DT_kVA = 1.5;  // volts per (radians per second)
+    public static final double DT_kAA = 0.3;  // volts per (radians per second squared)
 
     //////////////////////////////////////////////////////////////////
     // Electrical
@@ -81,4 +85,5 @@ public class Constants {
     public static final double kWheelRadius_m = Units.inchesToMeters(kWheelDiameter_in/2.0); //Radius of the drivetrain wheels in Meters.
     public static final double kTrackWidth_m = Units.inchesToMeters(kTrackWidth_in);
     public static final DifferentialDriveKinematics kDtKinematics = new DifferentialDriveKinematics(kTrackWidth_m);
+    public static final LinearSystem<N2, N2, N2> drivetrainSystem = LinearSystemId.identifyDrivetrainSystem(DT_kVL, DT_kAL, DT_kVA, DT_kAA);
 }

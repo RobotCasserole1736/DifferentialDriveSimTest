@@ -1,5 +1,6 @@
 package frc.wrappers.TalonFX;
 
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -36,18 +37,17 @@ public class RealTalonFX extends CasseroleTalonFX {
 
 
     @Override
-    public void setClosedLoopGains(double p, double i, double d, double f) {
+    public void setClosedLoopGains(double p, double i, double d) {
         _talon.config_kP(0, p, TIMEOUT_MS);
         _talon.config_kI(0, i, TIMEOUT_MS);
         _talon.config_kD(0, d, TIMEOUT_MS);
-        _talon.config_kF(0, f, TIMEOUT_MS);        
     }
 
 
     @Override
-    public void setVelocityCmd(double velocity_radpersec) {
-        var velCmdRPM = Units.radiansPerSecondToRotationsPerMinute(velocity_radpersec);
-        _talon.set(TalonFXControlMode.Velocity, RPMtoCTRENativeUnits(velCmdRPM));
+    public void setClosedLoopCmd(double velocityCmd_radpersec, double arbFF_fracSupply) {
+        var velCmdRPM = Units.radiansPerSecondToRotationsPerMinute(velocityCmd_radpersec);
+        _talon.set(TalonFXControlMode.Velocity, RPMtoCTRENativeUnits(velCmdRPM), DemandType.ArbitraryFeedForward, arbFF_fracSupply);
     }
 
 

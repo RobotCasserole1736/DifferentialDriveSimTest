@@ -9,7 +9,6 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.PoseTelemetry;
-import frc.robot.Robot;
 
 public class Drivetrain {
 
@@ -68,6 +67,7 @@ public class Drivetrain {
                 ChassisSpeeds adjustedSpeeds = ramsete_ctrl.calculate(poseEst.getPoseEst(), curDesTrajState); 
                 var curSpdCmds = Constants.kDtKinematics.toWheelSpeeds(adjustedSpeeds);
                 hwInf.setCommand(curSpdCmds);
+                break;
             default:
                 hwInf.setCommand(0.0, 0.0);
                 break;
@@ -185,6 +185,13 @@ public class Drivetrain {
     public void setCurPose(Pose2d pose_in){
         poseEst.resetToPose(pose_in);
     }
+
+    /**
+     * Gets current drivetrain pose estimation
+     */
+    public Pose2d getCurPoseEst(){
+      return poseEst.getPoseEst();
+  }
     
 
     

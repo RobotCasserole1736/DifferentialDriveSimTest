@@ -16,8 +16,8 @@ public abstract class CasseroleTalonFX extends SimCANDevice {
     public final double NATIVE_UNITS_PER_REV = 2048.0;
     
     public abstract void setInverted(boolean invert);
-    public abstract void setClosedLoopGains(double p, double i, double d, double f);
-    public abstract void setVelocityCmd(double velocity_radpersec);
+    public abstract void setClosedLoopGains(double p, double i, double d);
+    public abstract void setClosedLoopCmd(double velocityCmd_radpersec, double arbFF_fracSupply);
     public abstract void setVoltageCmd(double cmd_v);
     public abstract double getCurrent_A();
     public abstract double getVelocity_radpersec();

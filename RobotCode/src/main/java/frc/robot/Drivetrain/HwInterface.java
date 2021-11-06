@@ -1,8 +1,14 @@
 package frc.robot.Drivetrain;
 
+import org.eclipse.jetty.websocket.server.WebSocketHandler.Simple;
+
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import frc.Constants;
+import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
+import frc.robot.BatteryMonitor;
 import frc.wrappers.TalonFX.CasseroleTalonFX;
 import frc.wrappers.TalonFX.TalonFXFactory;
 
@@ -13,6 +19,11 @@ public class HwInterface {
     CasseroleTalonFX leftFollower;
     CasseroleTalonFX rightLeader;
     CasseroleTalonFX rightFollower;
+
+    
+    Calibration kP = new Calibration("Drivetrain Velocity kP", 0.0);
+    Calibration kD = new Calibration("Drivetrain Velocity kD", 0.0);
+
 
     public enum DtHwCtrlMode {
         Voltage(0), // Open Loop Voltage Command Only
@@ -46,6 +57,9 @@ public class HwInterface {
     double leftOLVoltageCmd = 0;
 
     DifferentialDriveWheelSpeeds curSpdCmds;
+
+    SimpleMotorFeedforward left_ff = new SimpleMotorFeedforward(Constants.DT_kSL, Constants.DT_kVL, Constants.DT_kAL);
+    SimpleMotorFeedforward right_ff = new SimpleMotorFeedforward(Constants.DT_kSL, Constants.DT_kVL, Constants.DT_kAL);
 
     public HwInterface(){
 
@@ -106,6 +120,14 @@ public class HwInterface {
         leftActSpd_rps  = leftLeader.getVelocity_radpersec();
         rightActSpd_rps = rightLeader.getVelocity_radpersec();
 
+        if(kP.isChanged() || kD.isChanged()){
+            updateClosedLoopGains();
+        }
+    }
+
+    private void updateClosedLoopGains(){
+        leftLeader.setClosedLoopGains(kP.get(), 0, kD.get());
+        rightLeader.setClosedLoopGains(kP.get(), 0, kD.get());
     }
 
     /**
@@ -121,8 +143,11 @@ public class HwInterface {
             case ClosedLoopVelocity:
                 leftDesSpd_rps = DtUtils.DtLinM_to_MotorRotationRad(curSpdCmds.leftMetersPerSecond);
                 rightDesSpd_rps = DtUtils.DtLinM_to_MotorRotationRad(curSpdCmds.rightMetersPerSecond);
-                leftLeader.setVelocityCmd(leftDesSpd_rps);
-                rightLeader.setVelocityCmd(rightDesSpd_rps);
+                var supplyVoltage = BatteryMonitor.getInstance().getCurBatteryVoltage();
+                var leftFF_term = left_ff.calculate(curSpdCmds.leftMetersPerSecond) / supplyVoltage;
+                var rightFF_term = right_ff.calculate(curSpdCmds.rightMetersPerSecond) / supplyVoltage;
+                leftLeader.setClosedLoopCmd(leftDesSpd_rps, leftFF_term);
+                rightLeader.setClosedLoopCmd(rightDesSpd_rps, rightFF_term);
             break;
             default:
                 leftLeader.setVoltageCmd(0.0);

@@ -31,10 +31,10 @@ public class Robot extends TimedRobot {
   Dashboard db;
 
   // Things
-  PowerDistributionPanel pdp;
   CasseroleRIOLoadMonitor loadMon;
   DriverController dc;
   OperatorController oc;
+  BatteryMonitor bm;
 
   // Robot Subsystems
   Drivetrain dt;
@@ -54,6 +54,8 @@ public class Robot extends TimedRobot {
     PoseTelemetry.getInstance();
 
     dt = Drivetrain.getInstance();
+
+    bm = BatteryMonitor.getInstance();
 
     dc = DriverController.getInstance();
     oc = OperatorController.getInstance();
@@ -96,8 +98,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    syncSimPoseToEstimate();
     auto.startSequencer();
+    syncSimPoseToEstimate();
   }
 
   @Override
@@ -128,6 +130,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    bm.update();
     dt.update();
     db.updateDriverView();
     telemetryUpdate();
@@ -151,7 +154,7 @@ public class Robot extends TimedRobot {
 
   public void syncSimPoseToEstimate(){
     if(Robot.isSimulation()){
-      m_plant.m_dt.resetPose(PoseTelemetry.getInstance().estimatedPose);
+      m_plant.m_dt.resetPose(dt.getCurPoseEst());
     }
   }
 

@@ -76,8 +76,9 @@ public class Autonomous extends LocalClient  {
         delayModeList.add(new Wait(6.0));
         delayModeList.add(new Wait(9.0));
 
-        mainModeList.add(new DoNothing());
         mainModeList.add(new DriveFwd());
+        mainModeList.add(new DoNothing());
+        
 
         // Create and subscribe to NT4 topics
         curDelayModeTopic = NT4Server.getInstance().publishTopic(delayModeList.getCurModeTopicName(), NT4TypeStr.INT, this);
@@ -87,18 +88,26 @@ public class Autonomous extends LocalClient  {
 
         this.subscribe(Set.of(delayModeList.getDesModeTopicName(), mainModeList.getDesModeTopicName()), 0).start();
 
+        curDelayMode = delayModeList.getDefault();
+        curMainMode  = mainModeList.getDefault();
+
     }
 
     /* This should be called periodically in Disabled, and once in auto init */
     public void sampleDashboardSelector(){
         curDelayMode = delayModeList.get((int)curDelayMode_dashboard);
         curMainMode = mainModeList.get((int)curMainMode_dashboard);	
-        loadSequencer();
+        if(curDelayMode != prevDelayMode || curMainMode != prevMainMode){
+            loadSequencer();
+            prevDelayMode = curDelayMode;
+            prevMainMode = curMainMode;
+        }
     }
 
 
     public void startSequencer(){
         sampleDashboardSelector(); //ensure it gets called once more
+        Drivetrain.getInstance().setCurPose(curMainMode.getInitialPose());
         if(curMainMode != null){
             seq.start();
         }
@@ -106,21 +115,19 @@ public class Autonomous extends LocalClient  {
 
     public void loadSequencer(){
         
-        if(curDelayMode != prevDelayMode || curMainMode != prevMainMode){
+        CrashTracker.logGenericMessage("Initing new auto routine " + curDelayMode.humanReadableName + "s delay, " + curMainMode.humanReadableName);
 
-            CrashTracker.logGenericMessage("Initing new auto routine " + curDelayMode.humanReadableName + "s delay, " + curMainMode.humanReadableName);
+        seq.stop();
+        seq.clearAllEvents();
 
-            seq.stop();
-            seq.clearAllEvents();
+        curDelayMode.addStepsToSequencer(seq);
+        curMainMode.addStepsToSequencer(seq);
+    
+        Drivetrain.getInstance().setCurPose(curMainMode.getInitialPose());
 
-            curDelayMode.addStepsToSequencer(seq);
-            curMainMode.addStepsToSequencer(seq);
+        curDelayModeTopic.submitNewValue(new TimestampedInteger(curDelayMode.idx));
+        curMainModeTopic.submitNewValue(new TimestampedInteger(curMainMode.idx));
         
-            prevDelayMode = curDelayMode;
-            prevMainMode = curMainMode;
-
-            Drivetrain.getInstance().setCurPose(curMainMode.getInitialPose());
-        }
     }
 
 
@@ -129,7 +136,7 @@ public class Autonomous extends LocalClient  {
         seq.update();
     }
 
-    /* Should be called when returning to disabled to stop everything */
+    /* Should be called when returning to disabled to stop and reset everything */
     public void reset(){
         seq.stop();
         loadSequencer();
