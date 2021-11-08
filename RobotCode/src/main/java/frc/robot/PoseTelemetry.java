@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
 import frc.lib.Signal.Signal;
 
 public class PoseTelemetry {
@@ -44,17 +43,17 @@ public class PoseTelemetry {
 
 
     private PoseTelemetry(){
-        xPosDesFtSig     = new Signal("botDesPoseX", "ft");
-        yPosDesFtSig     = new Signal("botDesPoseY", "ft");
-        tRotDesDegSig    = new Signal("botDesPoseT", "deg");
+        xPosDesFtSig     = new Signal("pose_DES_x", "m");
+        yPosDesFtSig     = new Signal("pose_DES_y", "m");
+        tRotDesDegSig    = new Signal("pose_DES_rot", "rad");
 
-        xPosEstFtSig     = new Signal("botEstPoseX", "ft");
-        yPosEstFtSig     = new Signal("botEstPoseY", "ft");
-        tRotEstDegSig    = new Signal("botEstPoseT", "deg");
+        xPosEstFtSig     = new Signal("pose_EST_x", "m");
+        yPosEstFtSig     = new Signal("pose_EST_y", "m");
+        tRotEstDegSig    = new Signal("pose_EST_rot", "rad");
 
-        xPosActFtSig     = new Signal("botActPoseX", "ft");
-        yPosActFtSig     = new Signal("botActPoseY", "ft");
-        tRotActDegSig    = new Signal("botActPoseT", "deg");
+        xPosActFtSig     = new Signal("pose_ACT_x", "m");
+        yPosActFtSig     = new Signal("pose_ACT_y", "m");
+        tRotActDegSig    = new Signal("pose_ACT_rot", "rad");
 
         SmartDashboard.putData("Field", field);
 
@@ -71,17 +70,17 @@ public class PoseTelemetry {
     }
 
     public void update(double time){
-        xPosActFtSig.addSample(time,  Units.metersToFeet(actualPose.getTranslation().getX()));
-        yPosActFtSig.addSample(time,  Units.metersToFeet(actualPose.getTranslation().getY()));
-        tRotActDegSig.addSample(time, actualPose.getRotation().getDegrees());
+        xPosActFtSig.addSample(time,  (actualPose.getTranslation().getX()));
+        yPosActFtSig.addSample(time,  (actualPose.getTranslation().getY()));
+        tRotActDegSig.addSample(time, actualPose.getRotation().getRadians());
 
-        xPosDesFtSig.addSample(time,  Units.metersToFeet(desiredPose.getTranslation().getX()));
-        yPosDesFtSig.addSample(time,  Units.metersToFeet(desiredPose.getTranslation().getY()));
-        tRotDesDegSig.addSample(time, desiredPose.getRotation().getDegrees());
+        xPosDesFtSig.addSample(time,  (desiredPose.getTranslation().getX()));
+        yPosDesFtSig.addSample(time,  (desiredPose.getTranslation().getY()));
+        tRotDesDegSig.addSample(time, desiredPose.getRotation().getRadians());
 
-        xPosEstFtSig.addSample(time,  Units.metersToFeet(estimatedPose.getTranslation().getX()));
-        yPosEstFtSig.addSample(time,  Units.metersToFeet(estimatedPose.getTranslation().getY()));
-        tRotEstDegSig.addSample(time, estimatedPose.getRotation().getDegrees());
+        xPosEstFtSig.addSample(time,  (estimatedPose.getTranslation().getX()));
+        yPosEstFtSig.addSample(time,  (estimatedPose.getTranslation().getY()));
+        tRotEstDegSig.addSample(time, estimatedPose.getRotation().getRadians());
 
         field.getObject("DesPose").setPose(desiredPose);
         field.getObject("Robot").setPose(actualPose);

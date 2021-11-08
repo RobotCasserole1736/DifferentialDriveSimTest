@@ -1,10 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.lib.Signal.SignalUtils;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
 import frc.lib.Webserver2.DashboardConfig.DashboardConfig;
+import frc.lib.Webserver2.DashboardConfig.FieldPoseTopicSet;
+import frc.lib.Webserver2.DashboardConfig.FieldPose.PoseType;
 import frc.robot.Autonomous.Autonomous;
 
 
@@ -28,12 +29,12 @@ public class Dashboard {
     public Dashboard (Webserver2 ws_in) {
         d = ws_in.dashboard;
 
-        final double RIGHT_COL = 17;
+        final double LEFT_COL = 17;
         final double CENTER_COL = 50;
-        final double LEFT_COL = 83;
+        final double RIGHT_COL = 83;
 
         final double ROW1 = 15;
-        final double ROW2 = 60;
+        final double ROW2 = 50;
         final double ROW3 = 75;
         final double ROW4 = 85;
 
@@ -46,6 +47,8 @@ public class Dashboard {
 
         //d.addCamera("cam1", "http://10.17.36.10:1181/stream.mjpg", LEFT_COL, ROW2, 0.75);
         //d.addCamera("cam2", "http://10.17.36.10:1182/stream.mjpg", RIGHT_COL, ROW2, 0.75);
+
+        d.addFieldPose("pose", "Field", LEFT_COL, ROW2, 0.75);
 
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_masterCaution"),"Master Caution", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW2, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW2, 1.0);

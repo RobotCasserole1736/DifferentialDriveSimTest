@@ -3,6 +3,7 @@ package frc.lib.Webserver2.DashboardConfig;
 import java.util.LinkedList;
 
 import frc.lib.Autonomous.AutoModeList;
+import frc.lib.Webserver2.DashboardConfig.FieldPose.PoseType;
 
 public class DashboardConfig {
 
@@ -115,6 +116,19 @@ public class DashboardConfig {
         w.FRTopics = topics_in[1];
         w.BLTopics = topics_in[2];
         w.BRTopics = topics_in[3];
+        widgetList.add(w);
+    }
+
+    public void addFieldPose(String topicPrefix, String name, double xPos, double yPos, double sizeScaleFactor) {
+        var w = new FieldPose();
+        w.idx = widgetList.size();
+        w.xPos = xPos;
+        w.yPos = yPos;
+        w.name = name;
+        w.sizeScaleFactor = sizeScaleFactor;
+        w.desTopics = new FieldPoseTopicSet(topicPrefix,PoseType.Desired);
+        w.expTopics = new FieldPoseTopicSet(topicPrefix,PoseType.Estimated);
+        w.actTopics = new FieldPoseTopicSet(topicPrefix,PoseType.Actual);
         widgetList.add(w);
     }
 

@@ -7,9 +7,6 @@ import frc.lib.miniNT4.NT4Server;
 import frc.lib.miniNT4.NT4TypeStr;
 import frc.lib.miniNT4.samples.TimestampedDouble;
 import frc.lib.miniNT4.samples.TimestampedString;
-import frc.lib.miniNT4.samples.TimestampedValueFactory;
-import frc.lib.miniNT4.topics.DoubleTopic;
-import frc.lib.miniNT4.topics.StringTopic;
 import frc.lib.miniNT4.topics.Topic;
 
 /*

@@ -15,7 +15,7 @@ export class CircularGauge {
         this.hasData = false;
         this.curVal = 0;
 
-        // Animation - intermedeate drawn fill percentage
+        // Animation - intermediate drawn fill percentage
         // to keep stuff feeling smooth and high quality
         this.animatedCurValue = 0;
         this.prevTime = performance.now();

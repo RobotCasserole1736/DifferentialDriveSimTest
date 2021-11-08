@@ -1,6 +1,6 @@
 
 //Array index lookups. Must be kept in sync with .java definitions
-// Allows for single-write accesses into the different state variables
+// Allows for single-read accesses into the different state variables
 var AZMTH_ACT_IDX = 0;
 var AZMTH_DES_IDX = 1;
 var SPEED_ACT_IDX = 2;
