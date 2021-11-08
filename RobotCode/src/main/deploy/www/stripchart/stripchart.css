@@ -72,7 +72,7 @@ plotSignalInfoContainer {
     flex-direction: column;
     flex-grow:0;
     font-family: monospace;
-    width: 250px;
+    width: 300px;
 }
 
 plottedSignalInfo {

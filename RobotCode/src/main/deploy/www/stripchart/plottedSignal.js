@@ -22,9 +22,10 @@ export class PlottedSignal {
         this.drawDiv.classList.add("plottedSignalInfo");
         this.drawDiv.setAttribute('draggable', true);
         this.drawDiv.addEventListener( "dragstart", this.onDragStart.bind(this) );
+        this.drawDiv.setAttribute('title', signal_in.name);
 
         var nameInfo = document.createElement("plottedSignalName");
-        nameInfo.innerHTML = signal_in.name;
+        nameInfo.innerHTML = signal_in.name.substring(signal_in.name.lastIndexOf(".") + 1); //only show the last portion of the name for long names.
         this.drawDiv.appendChild(nameInfo);
 
         var unitsInfo = document.createElement("plottedSignalUnits");

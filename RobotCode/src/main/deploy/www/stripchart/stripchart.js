@@ -61,6 +61,9 @@ addPlot();
 //Start main animation loop
 mainAnimationLoop();
 
+//Attach key handler
+document.addEventListener('keydown', keypressHandler);
+
 /////////////////////////////////////////////////////////////
 //Utility Functions
 
@@ -289,6 +292,32 @@ function onChartZoomAction(startTime, endTime){
     if(!recordingRunning){
         plotList.forEach(plot=>plot.setDrawRange(startTime, endTime));
     } 
+}
+
+///////////////////////////
+// Keyboard Events
+
+function keypressHandler(e){
+    if(e.code == "Delete"){
+        //Remove all selected signals
+        plotList.forEach(plot=>{
+            plot.plottedSignalsMap.forEach(ps => {
+                if(ps.selected == true){
+                    plot.removePlottedSignal(ps.signal.name);
+                }
+            });
+        });
+    } else if(e.code == "KeyA"){
+        //Select All
+        plotList.forEach(plot=>{
+            plot.plottedSignalsMap.forEach(ps => {
+                ps.selected = true;
+            });
+        });
+    } else if(e.code == "KeyU"){
+        // Clear Measurement
+        unselectAllBtnClick();
+    }
 }
 
 ///////////////////////////
