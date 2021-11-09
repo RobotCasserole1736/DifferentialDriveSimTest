@@ -37,6 +37,7 @@ public class Vision {
                     minTargetArea);
 
         simVision.addSimVisionTarget(Constants.kFarTarget);
+        simVision.addSimVisionTarget(Constants.kNearTarget);
 
     }
 

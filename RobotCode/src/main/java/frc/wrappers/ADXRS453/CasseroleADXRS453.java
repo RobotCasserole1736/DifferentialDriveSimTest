@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.util.Units;
 
 public abstract class CasseroleADXRS453 {
 
-    public abstract void reset();
+    public abstract void reset(double curAngle_deg);
     public abstract void calibrate();
     public abstract double getRate();
     public abstract double getAngle();

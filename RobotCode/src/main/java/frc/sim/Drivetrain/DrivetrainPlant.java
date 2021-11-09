@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import frc.Constants;
 import frc.robot.PoseTelemetry;
 import frc.robot.Drivetrain.DtUtils;
+import frc.sim.Drivetrain.Vision.Vision;
 import frc.wrappers.SimCANDeviceBank;
 import frc.wrappers.ADXRS453.ADXRS453Factory;
 import frc.wrappers.ADXRS453.SimADXRS453;
@@ -20,6 +21,7 @@ public class DrivetrainPlant {
 
     // Simulated Sensors
     SimADXRS453 gyroSim = ADXRS453Factory.getSimGyro();
+    Vision simVision = new Vision();
 
     // Simulated Motor Controllers
     SimTalonFX leftLeader    = (SimTalonFX) SimCANDeviceBank.get(Constants.kDtLeftLeaderCAN_ID   );
@@ -89,6 +91,9 @@ public class DrivetrainPlant {
                         .getDegrees()); // Gyros have an inverted reference frame for
                                         // angles, so multiply by -1.0;
 
+        simVision.setCurrentPose(drivetrainSimulator.getPose());
+        simVision.update();
+        
         PoseTelemetry.getInstance().setActualPose(drivetrainSimulator.getPose());
     }
 

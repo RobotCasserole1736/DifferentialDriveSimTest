@@ -6,11 +6,13 @@ public class SimADXRS453 extends CasseroleADXRS453 {
 
     double rate;
     double angle;
+    double offset = 0;
 
     @Override
-    public void reset() {
+    public void reset(double curAngle_deg) {
         rate = 0;
         angle = 0;
+        offset = curAngle_deg;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class SimADXRS453 extends CasseroleADXRS453 {
 
     @Override
     public double getAngle() {
-        return angle;
+        return angle + offset;
     }
 
     @Override

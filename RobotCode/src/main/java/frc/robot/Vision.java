@@ -12,7 +12,7 @@ public class Vision {
 
     private PhotonCamera cam;
     double imageCaptureTime = -1;
-    Pose2d dtPoseEst = null;
+    Transform2d camToTargetTrans = null;
 
     double tgtAngle = 0.0;
 
@@ -31,8 +31,9 @@ public class Vision {
         cam = new PhotonCamera(Constants.kCamName);
     }
 
-    public Pose2d getDtPoseEst(){
-        return dtPoseEst;
+    public Pose2d getDtPoseEst(boolean isFar){
+        Pose2d tgtPose = isFar?Constants.kFarTargetPose:Constants.kNearTargetPose;
+        return tgtPose.transformBy(camToTargetTrans.inverse()).transformBy(Constants.kCameraToRobot);
     }
 
     public double getCaptureTime(){
@@ -48,7 +49,7 @@ public class Vision {
     }
 
     public boolean targetVisble(){
-        return (dtPoseEst != null);
+        return (camToTargetTrans != null);
     }
 
     public void update(){
@@ -59,12 +60,11 @@ public class Vision {
 
         if (res.hasTargets()) {
             var tgt = res.getBestTarget();
-            Transform2d camToTargetTrans = tgt.getCameraToTarget();
-            dtPoseEst = Constants.kFarTargetPose.transformBy(camToTargetTrans.inverse()).transformBy(Constants.kCameraToRobot);
+            camToTargetTrans = tgt.getCameraToTarget();
             imageCaptureTime = rxTime - res.getLatencyMillis();
             tgtAngle = tgt.getYaw();
         } else {
-            dtPoseEst = null;
+            camToTargetTrans = null;
             imageCaptureTime = -1;
             tgtAngle = 0.0;
         }

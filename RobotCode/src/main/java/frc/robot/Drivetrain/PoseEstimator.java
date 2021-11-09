@@ -30,15 +30,11 @@ public class PoseEstimator {
     Matrix<N3, N1> localMeasurementStdDevs = VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(0.1));
     Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(0.1));
 
-    private final DifferentialDrivePoseEstimator m_poseEstimator =
-            new DifferentialDrivePoseEstimator(
-                    gyro.getRotation2d(),
-                    new Pose2d(),
-                    stateStdDevs,
-                    localMeasurementStdDevs,
-                    visionMeasurementStdDevs);
+    private DifferentialDrivePoseEstimator m_poseEstimator;
 
-    public PoseEstimator() {}
+    public PoseEstimator() {
+        this.resetToPose(new Pose2d());
+    }
 
     /**
     * Perform all periodic pose estimation tasks.
@@ -51,8 +47,11 @@ public class PoseEstimator {
             DifferentialDriveWheelSpeeds actWheelSpeeds, double leftWheelDeltaDist, double rightWheelDeltaDist) {
 
         // Incorporate any available camera data
+        cam.update();
         if(cam.targetVisble()){
-            m_poseEstimator.addVisionMeasurement(cam.getDtPoseEst(), cam.getCaptureTime());
+            var curAngle = getPoseEst().getRotation().getDegrees();
+            boolean pointedTowardFarTarget = (curAngle < 90 && curAngle > -90);
+            m_poseEstimator.addVisionMeasurement(cam.getDtPoseEst(pointedTowardFarTarget), cam.getCaptureTime());
         }
 
         // Step the estimator forward based on gyro/drivetrain sensor readings
@@ -70,7 +69,18 @@ public class PoseEstimator {
     * @param pose
     */
     public void resetToPose(Pose2d pose) {
-        m_poseEstimator.resetPosition(pose, gyro.getRotation2d());
+        gyro.reset(pose.getRotation().unaryMinus().getDegrees());
+
+        // TODO - 2022 latest wpilib should properly reset the observer and latency compensator, making this unneeded.
+        m_poseEstimator =
+        new DifferentialDrivePoseEstimator(
+                gyro.getRotation2d(),
+                new Pose2d(),
+                stateStdDevs,
+                localMeasurementStdDevs,
+                visionMeasurementStdDevs);
+
+        m_poseEstimator.resetPosition(pose, gyro.getRotation2d().unaryMinus());
     }
 
     /** @return The current best-guess at drivetrain position on the field. */

@@ -74,6 +74,12 @@ public class Constants {
     public static final Pose2d kFarTargetPose = new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
     public static final SimVisionTarget kFarTarget = new SimVisionTarget(kFarTargetPose, targetHeightAboveGround, targetWidth, targetHeight);
 
+    public static final double kNearTgtXPos = Units.feetToMeters(0);
+    public static final double kNearTgtYPos = Units.feetToMeters(27 / 2) + Units.inchesToMeters(43.75) + Units.inchesToMeters(48.0 / 2.0);
+    public static final Pose2d kNearTargetPose = new Pose2d(new Translation2d(kNearTgtXPos, kNearTgtYPos), new Rotation2d(180.0));
+    public static final SimVisionTarget kNearTarget = new SimVisionTarget(kNearTargetPose, targetHeightAboveGround, targetWidth, targetHeight);
+
+
     //////////////////////////////////////////////////////////////////
     // Nominal Sample Times
     //////////////////////////////////////////////////////////////////

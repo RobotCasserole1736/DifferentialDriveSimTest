@@ -70,7 +70,6 @@ public class Robot extends TimedRobot {
       simulationSetup();
     }
 
-
     SignalWrangler.getInstance().registerSignals(this);
     webserver.startServer();
 
@@ -83,7 +82,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     SignalWrangler.getInstance().logger.stopLogging();
-    auto.reset();
   }
 
   @Override
@@ -98,6 +96,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    auto.reset();
     auto.startSequencer();
     syncSimPoseToEstimate();
   }

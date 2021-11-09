@@ -52,6 +52,8 @@ export class FieldPose {
 
         // Set up drawing canvas within provided div
         this.canvas = document.createElement('canvas');
+        this.canvas.style.backgroundImage = "url('fields/2020.png')";
+        this.canvas.style.backgroundSize = "cover";
         this.docElem = document.getElementById(this.draw_div_id );
         this.canvas.id = this.draw_div_id + "_canvas";
         this.docElem.appendChild(this.canvas);
@@ -108,7 +110,7 @@ export class FieldPose {
         this.ctx.save();
         //Rotate to module reference frame
         this.ctx.translate(center_x_px, center_y_px);
-        this.ctx.rotate(rotation_rad);
+        this.ctx.rotate(-1.0 * rotation_rad);
 
         switch(type){
             case STYLE_FIELD:
@@ -120,24 +122,60 @@ export class FieldPose {
                 break;
             case STYLE_BOT_DES:
                 this.ctx.beginPath();
-                this.ctx.lineWidth = "1";
-                this.ctx.strokeStyle = "#FF0000";
+                this.ctx.lineWidth = "2";
+                this.ctx.strokeStyle = "#000000";
+                this.ctx.fillStyle = "#FF0000";
                 this.ctx.rect(-xLen_px/2, -yLen_px/2, xLen_px, yLen_px);
+                this.ctx.fill();
                 this.ctx.stroke();
+
+
+                this.ctx.fillStyle = "#000000";
+                this.ctx.beginPath();
+                this.ctx.moveTo(-xLen_px/3, -yLen_px/3);
+                this.ctx.lineTo(-xLen_px/3, yLen_px/3);
+                this.ctx.lineTo(xLen_px/2, 0);
+                this.ctx.closePath();
+                this.ctx.fill();
+
                 break;
             case STYLE_BOT_ACT:
                 this.ctx.beginPath();
-                this.ctx.lineWidth = "1";
-                this.ctx.strokeStyle = "#00FF00";
+                this.ctx.lineWidth = "2";
+                this.ctx.strokeStyle = "#000000";
+                this.ctx.fillStyle = "#00FF00";
                 this.ctx.rect(-xLen_px/2, -yLen_px/2, xLen_px, yLen_px);
+                this.ctx.fill();
                 this.ctx.stroke();
+
+
+                this.ctx.fillStyle = "#000000";
+                this.ctx.beginPath();
+                this.ctx.moveTo(-xLen_px/3, -yLen_px/3);
+                this.ctx.lineTo(-xLen_px/3, yLen_px/3);
+                this.ctx.lineTo(xLen_px/2, 0);
+                this.ctx.closePath();
+                this.ctx.fill();
+                
+
                 break;
             case STYLE_BOT_EST:
                 this.ctx.beginPath();
-                this.ctx.lineWidth = "1";
-                this.ctx.strokeStyle = "#0000FF";
+                this.ctx.lineWidth = "2";
+                this.ctx.strokeStyle = "#000000";
+                this.ctx.fillStyle = "#00FFFF";
                 this.ctx.rect(-xLen_px/2, -yLen_px/2, xLen_px, yLen_px);
+                this.ctx.fill();
                 this.ctx.stroke();
+
+                this.ctx.fillStyle = "#000000";
+                this.ctx.beginPath();
+                this.ctx.moveTo(-xLen_px/3, -yLen_px/3);
+                this.ctx.lineTo(-xLen_px/3, yLen_px/3);
+                this.ctx.lineTo(xLen_px/2, 0);
+                this.ctx.closePath();
+                this.ctx.fill();
+
                 break;
         }
 
